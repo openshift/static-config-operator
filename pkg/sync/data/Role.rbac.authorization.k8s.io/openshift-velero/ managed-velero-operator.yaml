@@ -1,8 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  creationTimestamp: null
-  name: static-config-operator
+  labels:
+    api.openshift.com/managed: "true"
+    hive.openshift.io/cluster-platform: aws
+  name: managed-velero-operator
+  namespace: openshift-velero
 rules:
 - apiGroups:
   - ""
@@ -36,7 +39,7 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - static-config-operator
+  - managed-velero-operator
   resources:
   - deployments/finalizers
   verbs:
@@ -54,15 +57,22 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - configs.staticcontent.operator.openshift.io
+  - managed.openshift.io
+  resources:
+  - veleros
+  - veleros/status
+  - veleros/finalizers
+  verbs:
+  - '*'
+- apiGroups:
+  - velero.io
   resources:
   - '*'
   verbs:
   - '*'
 - apiGroups:
-  - configs.staticcontent.operators.openshift.io
+  - cloudcredential.openshift.io
   resources:
-  - '*'
-  - configs
+  - credentialsrequests
   verbs:
   - '*'
