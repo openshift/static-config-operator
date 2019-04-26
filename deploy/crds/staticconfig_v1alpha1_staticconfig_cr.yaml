@@ -1,0 +1,7 @@
+apiVersion: staticconfig.aws.managed.openshift.io/v1alpha1
+kind: StaticConfig
+metadata:
+  name: example-staticconfig
+spec:
+  # Add fields here
+  size: 3

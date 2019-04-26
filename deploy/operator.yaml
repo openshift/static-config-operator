@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-config-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: static-config-operator
+  template:
+    metadata:
+      labels:
+        name: static-config-operator
+    spec:
+      serviceAccountName: static-config-operator
+      containers:
+        - name: static-config-operator
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - static-config-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "static-config-operator"
