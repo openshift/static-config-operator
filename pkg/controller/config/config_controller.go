@@ -110,5 +110,5 @@ func (r *ReconcileConfig) Reconcile(request reconcile.Request) (reconcile.Result
 		return reconcile.Result{}, nil
 	}
 
-	return r.sync.Sync(config)
+	return r.sync.Sync()
 }

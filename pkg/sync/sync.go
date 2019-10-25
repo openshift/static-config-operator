@@ -40,7 +40,7 @@ const (
 )
 
 type Interface interface {
-	Sync(*configsv1alpha1.Config) (reconcile.Result, error)
+	Sync() (reconcile.Result, error)
 	SyncPeriodic(*time.Duration)
 }
 
@@ -118,7 +118,7 @@ func (s *Sync) SyncPeriodic(interval *time.Duration) {
 	t := time.NewTicker(*interval)
 	for {
 		log.Info("starting sync")
-		if _, err := s.Sync(s.config); err != nil {
+		if _, err := s.Sync(); err != nil {
 			log.Error(err, "sync error")
 		} else {
 			log.Info("sync done")
@@ -128,7 +128,7 @@ func (s *Sync) SyncPeriodic(interval *time.Duration) {
 }
 
 // Sync syncs all resources into the cluster
-func (s *Sync) Sync(config *configsv1alpha1.Config) (reconcile.Result, error) {
+func (s *Sync) Sync() (reconcile.Result, error) {
 	log.Info("start sync process")
 	var keys []string
 	for k := range s.store {
