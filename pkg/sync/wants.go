@@ -4,7 +4,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-
 // isDouble indicates if we should ignore a given GroupKind because it is
 // accessible via a different API route.
 func isDouble(gk schema.GroupKind) bool {

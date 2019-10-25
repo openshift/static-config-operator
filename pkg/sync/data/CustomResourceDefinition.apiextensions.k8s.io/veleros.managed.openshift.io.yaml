@@ -18,7 +18,7 @@ spec:
   - JSONPath: .status.s3Bucket.lastSyncTimestamp
     name: Last Sync
     type: date
-  conversion:                                                                                                                                                                                                                                                                                                                                                   
+  conversion:
     strategy: None
   group: managed.openshift.io
   names:

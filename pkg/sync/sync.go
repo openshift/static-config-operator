@@ -2,9 +2,8 @@ package sync
 
 import (
 	"sort"
-	"time"
-
 	concurrency "sync"
+	"time"
 
 	kapiextensions "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
