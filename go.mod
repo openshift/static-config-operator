@@ -1,24 +1,30 @@
 module github.com/openshift/static-config-operator
 
 require (
-	github.com/coreos/etcd v3.3.12+incompatible
-	github.com/davecgh/go-spew v1.1.1
+	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-openapi/spec v0.17.2
-	github.com/google/go-cmp v0.3.0
-	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/openshift/hive v0.0.0-20191020035449-08ae9d507dad
-	github.com/operator-framework/operator-sdk v0.11.1-0.20191023132048-424a61d56000
-	github.com/sirupsen/logrus v1.4.2
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
+	github.com/go-openapi/spec v0.19.2
+	github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d // indirect
+	github.com/google/go-cmp v0.3.1
+	github.com/google/gofuzz v1.0.0 // indirect
+	github.com/kubernetes/client-go v11.0.0+incompatible // indirect
+	github.com/operator-framework/operator-sdk v0.0.0-00010101000000-000000000000
 	github.com/spf13/pflag v1.0.3
 	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4
+	golang.org/x/net v0.0.0-20190812203447-cdfb69ac37fc // indirect
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58
+	golang.org/x/tools v0.0.0-20191025023517-2077df36852e // indirect
+	google.golang.org/genproto v0.0.0-20190502173448-54afdca5d873 // indirect
+	google.golang.org/grpc v1.23.0 // indirect
+	gopkg.in/yaml.v2 v2.2.4 // indirect
 	k8s.io/api v0.0.0-20190918155943-95b840bb6a1f
 	k8s.io/apiextensions-apiserver v0.0.0-20190918161926-8f644eb6e783
-	k8s.io/apimachinery v0.0.0-20190913080033-27d36303b655
+	k8s.io/apimachinery v0.0.0-20191023225540-31cb258e7ad9
 	k8s.io/client-go v11.0.1-0.20190409021438-1a26190bd76a+incompatible
-	k8s.io/kube-aggregator v0.0.0-20181204002017-122bac39d429
-	k8s.io/kube-openapi v0.0.0-20190401085232-94e1e7b7574c
+	k8s.io/component-base v0.0.0-20191023070445-be75e4906c11 // indirect
+	k8s.io/kube-aggregator v0.0.0-20190409022021-00b8e31abe9d
+	k8s.io/kube-openapi v0.0.0-20190816220812-743ec37842bf
 	sigs.k8s.io/controller-runtime v0.2.0
 )
 
@@ -29,6 +35,7 @@ replace (
 	k8s.io/apimachinery => k8s.io/apimachinery v0.0.0-20190404173353-6a84e37a896d
 	k8s.io/client-go => k8s.io/client-go v11.0.1-0.20190409021438-1a26190bd76a+incompatible
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.0.0-20190409023720-1bc0c81fa51d
+	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.0.0-20190409022021-00b8e31abe9d
 )
 
 replace (
