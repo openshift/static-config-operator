@@ -2,6 +2,7 @@ package sync
 
 import (
 	"encoding/base64"
+	"reflect"
 	"regexp"
 	"unicode/utf8"
 
@@ -171,5 +172,19 @@ func handleSpecialObjects(existing, o unstructured.Unstructured) {
 		}
 		// ClusterIP is immutable. Copy it over for update
 		o.Object["spec"].(map[string]interface{})["clusterIP"] = existing.Object["spec"].(map[string]interface{})["clusterIP"]
+		// operatorGroups does not persist this in the api server
+	case "OperatorGroup":
+		jsonpath.MustCompile("$.metadata.annotations.'olm.providedAPIs'").Set(o.Object, "")
 	}
+}
+
+func (s *Sync) needsUpdate(existing, o *unstructured.Unstructured) bool {
+	handleSpecialObjects(*existing, *o)
+
+	if reflect.DeepEqual(*existing, *o) {
+		return false
+	}
+
+	log.Info("Update " + keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName()))
+	return true
 }

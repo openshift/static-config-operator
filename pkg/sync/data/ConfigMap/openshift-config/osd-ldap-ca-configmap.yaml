@@ -5,5 +5,5 @@ metadata:
     api.openshift.com/managed: "true"
   name: osd-ldap-ca-configmap
   namespace: openshift-config
-stringData:
-  ca.crt: '*** GENERATED ***'
+data:
+  ca.crt: "test"

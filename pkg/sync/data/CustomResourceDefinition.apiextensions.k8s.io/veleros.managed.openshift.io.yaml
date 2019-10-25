@@ -18,6 +18,8 @@ spec:
   - JSONPath: .status.s3Bucket.lastSyncTimestamp
     name: Last Sync
     type: date
+  conversion:                                                                                                                                                                                                                                                                                                                                                   
+    strategy: None
   group: managed.openshift.io
   names:
     kind: Velero

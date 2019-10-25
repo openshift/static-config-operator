@@ -9,5 +9,6 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 subjects:
-- kind: Group
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
   name: osd-sre-cluster-admins

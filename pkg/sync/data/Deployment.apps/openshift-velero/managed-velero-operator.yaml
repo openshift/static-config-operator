@@ -23,6 +23,7 @@ spec:
         - name: POD_NAME
           valueFrom:
             fieldRef:
+              apiVersion: v1
               fieldPath: metadata.name
         - name: OPERATOR_NAME
           value: managed-velero-operator

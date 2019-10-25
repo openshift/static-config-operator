@@ -110,5 +110,11 @@ func defaults(o unstructured.Unstructured) {
 	case "StorageClass.storage.k8s.io":
 		jsonpath.MustCompile("$.reclaimPolicy").DeleteIfMatch(o.Object, "Delete")
 		jsonpath.MustCompile("$.volumeBindingMode").DeleteIfMatch(o.Object, "Immediate")
+
+	case "Namespace":
+		jsonpath.MustCompile("$.spec").Delete(o.Object)
+
+	case "CustomResourceDefinition":
+		jsonpath.MustCompile("$.status").Delete(o.Object)
 	}
 }

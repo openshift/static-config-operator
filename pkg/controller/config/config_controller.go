@@ -2,10 +2,10 @@ package config
 
 import (
 	"context"
+	"time"
 
-	configsv1alpha1 "github.com/openshift/static-config-operator/pkg/apis/configs/v1alpha1"
+	configsv1alpha1 "github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1"
 	"github.com/openshift/static-config-operator/pkg/sync"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -18,10 +18,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
-var log = logf.Log.WithName("controller_config")
+var (
+	log               = logf.Log.WithName("controller_config")
+	defaultSyncPerion = time.Minute * 5
+)
 
 const (
-	staticConfigCRName      = "staticconfig"
+	staticConfigCRName      = "cluster"
 	staticConfigCRNamespace = "openshift-static-config-operator"
 )
 
@@ -34,8 +37,9 @@ func Add(mgr manager.Manager) error {
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
 	return &ReconcileConfig{
-		client: mgr.GetClient(),
-		scheme: mgr.GetScheme(),
+		client:  mgr.GetClient(),
+		scheme:  mgr.GetScheme(),
+		manager: mgr,
 	}
 }
 
@@ -53,16 +57,6 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
-	// TODO(user): Modify this to be the types you create that are owned by the primary resource
-	// Watch for changes to secondary resource Pods and requeue the owner Config
-	err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, &handler.EnqueueRequestForOwner{
-		IsController: true,
-		OwnerType:    &configsv1alpha1.Config{},
-	})
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -74,7 +68,8 @@ type ReconcileConfig struct {
 	client client.Client
 	scheme *runtime.Scheme
 
-	sync sync.Interface
+	sync    sync.Interface
+	manager manager.Manager
 }
 
 // Reconcile reads that state of the cluster for a Config object and makes changes based on the state read
@@ -93,18 +88,25 @@ func (r *ReconcileConfig) Reconcile(request reconcile.Request) (reconcile.Result
 	}
 	config := instance.DeepCopy()
 
-	log.Info("Reconciling Config")
+	if config.Spec.SyncPeriond == nil {
+		log.Info("syncPerion is not set, defaulting")
+		config.Spec.SyncPeriond = &defaultSyncPerion
+	}
 
 	// If this is first run, we iniciate sync and set it
 	// We need config for it
 
 	if r.sync == nil {
 		log.Info("sync store is empty - initialize")
-		sync, err := sync.New(config, r.client, r.scheme)
+		sync, err := sync.New(config, r.manager)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
 		r.sync = sync
+
+		go r.sync.SyncPeriodic(config.Spec.SyncPeriond)
+		// first time return early as go routine will do the first sync
+		return reconcile.Result{}, nil
 	}
 
 	return r.sync.Sync(config)

@@ -8,7 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	configsv1alpha1 "github.com/openshift/static-config-operator/pkg/apis/configs/v1alpha1"
+	configsv1alpha1 "github.com/openshift/static-config-operator/pkg/apis/staticcontent/v1alpha1"
 	"github.com/openshift/static-config-operator/pkg/util/jsonpath"
 	util "github.com/openshift/static-config-operator/pkg/util/template"
 )
@@ -41,7 +41,7 @@ func translateAsset(o unstructured.Unstructured, config *configsv1alpha1.Config)
 			}
 		} else {
 			b, err := util.Template(fmt.Sprintf("%s/%d", keyFunc(o.GroupVersionKind().GroupKind(), o.GetNamespace(), o.GetName()), i), tr.Template, nil, map[string]interface{}{
-				"Config":  config.Spec,
+				"Config":  config.Spec.Config,
 				"Derived": derived,
 			})
 			s = string(b)
@@ -125,16 +125,16 @@ var translations = map[string][]struct {
 			Template:   "{{ .Config.TelemeterServerURL }}",
 		},
 	},
-	"Deployment.apps/openshift-valero/managed-valero-operator": {
-		{
-			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image'"),
-			Template: "{{ .Config.ValeroOperatorImage }}",
-		},
-	},
 	"Secret/openshift-config/osd-oauth-templates-errors": {
 		{
 			Path:     jsonpath.MustCompile("$.stringData.'errors.html'"),
 			Template: "{{ Base64Encode .Derived.OAuthTemplateErrors }}",
+		},
+	},
+	"Deployment.apps/openshift-velero/managed-velero-operator": {
+		{
+			Path:     jsonpath.MustCompile("$.spec.template.spec.containers[0].image'"),
+			Template: "{{ .Config.ValeroOperatorImage }}",
 		},
 	},
 	"Secret/openshift-config/osd-oauth-templates-login": {
