@@ -9,6 +9,7 @@ rules:
   resources:
   - pods
   - services
+  - services/finalizers
   - endpoints
   - persistentvolumeclaims
   - events
@@ -41,7 +42,32 @@ rules:
   verbs:
   - update
 - apiGroups:
-  - staticconfig.aws.managed.openshift.io
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - get
+- apiGroups:
+  - configs.staticcontent.operator.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - configs.staticcontent.operators.openshift.io
+  resources:
+  - '*'
+  - configs
+  verbs:
+  - '*'
+- apiGroups:
+  - staticcontent.operators.openshift.io
   resources:
   - '*'
   verbs:
